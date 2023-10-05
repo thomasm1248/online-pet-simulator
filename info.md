@@ -34,6 +34,7 @@
 - Health
 - Name
 - Picture
+- Pet type
 
 ### Classes
 
