@@ -18,11 +18,11 @@ DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
 
 
 
-#  #   # ##### ### #     ### ##### #   #
-#  #   #   #    #  #      #    #   #   #
-#  #   #   #    #  #      #    #    # #
-#  #   #   #    #  #      #    #     #
-#   ###    #   ### ##### ###   #     #
+#   #   # ##### ### #     ### ##### #   #
+#   #   #   #    #  #      #    #   #   #
+#   #   #   #    #  #      #    #    # #
+#   #   #   #    #  #      #    #     #
+#    ###    #   ### ##### ###   #     #
 #
 # General purpose functions that will be used by other parts of the
 # program.
@@ -55,11 +55,11 @@ def textToDate(text):
 
 
 
-#  #      ###   ###  ###  ###
-#  #     #   # #      #  #   #
-#  #     #   # #  ##  #  #
-#  #     #   # #   #  #  #   #
-#  #####  ###   #### ###  ###
+#   #      ###   ###  ###  ###
+#   #     #   # #      #  #   #
+#   #     #   # #  ##  #  #
+#   #     #   # #   #  #  #   #
+#   #####  ###   #### ###  ###
 #
 # Functions that handle the logic of the program.
 
@@ -82,10 +82,10 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
 
 
 
-#  ##### #   # ##### #   # #####  ###
-#  #     #   # #     ##  #   #   #
-#  ####  #   # ####  # # #   #    ###
-#  #      # #  #     #  ##   #       #
-#  #####   #   ##### #   #   #    ###
+#   ##### #   # ##### #   # #####  ###
+#   #     #   # #     ##  #   #   #
+#   ####  #   # ####  # # #   #    ###
+#   #      # #  #     #  ##   #       #
+#   #####   #   ##### #   #   #    ###
 #
 # Functions that will be called when GUI events take place.
