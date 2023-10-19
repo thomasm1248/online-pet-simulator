@@ -1,5 +1,7 @@
 from datetime import datetime
 
+
+
 #    ###  #      ###  ####   ###  #      ###
 #   #     #     #   # #   # #   # #     #
 #   #  ## #     #   # ####  ##### #      ###
@@ -13,6 +15,8 @@ pet = None
 
 # Constants
 DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
+
+
 
 #  #   # ##### ### #     ### ##### #   #
 #  #   #   #    #  #      #    #   #   #
@@ -49,6 +53,8 @@ def textToDate(text):
     """
     return datetime.strptime(text, DATETIME_FORMAT)
 
+
+
 #  #      ###   ###  ###  ###
 #  #     #   # #      #  #   #
 #  #     #   # #  ##  #  #
@@ -73,6 +79,8 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
     # Call the pet's tick method once for each minute
     for i in range(minutes):
         pet.tick()
+
+
 
 #  ##### #   # ##### #   # #####  ###
 #  #     #   # #     ##  #   #   #
