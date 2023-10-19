@@ -1,3 +1,4 @@
+from datetime import datetime
 
 # Util functions
 #
@@ -8,18 +9,21 @@
 #
 # Functions that handle the logic of the program.
 
-# Apply time to pet by calling the pet's tick method once per
-# minute of time.
-def simulateEffectOfTimeOnPet(pet, time):
+def simulateEffectOfTimeOnPet(pet, startTime, endTime):
     """
     Apply time to pet by calling the pet's tick method once per
-    minute of time that has passed.
+    minute from the start time to the end time.
 
     Args:
         pet (pet object): the pet
-        time (int): the minutes
+        startTime (datetime): the start time
+        endTime (datetime): the end time
     """
-    for i in range(time):
+    # Find the number of minutes between the two times
+    difference = endTime - startTime
+    minutes = difference.days * 24 * 60 + difference.seconds // 60
+    # Call the pet's tick method once for each minute
+    for i in range(minutes):
         pet.tick()
 
 # Event handlers
