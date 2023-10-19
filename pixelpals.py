@@ -8,6 +8,9 @@ from datetime import datetime
 #
 # Any global variables we need
 
+# The variable that will hold the pet object
+pet = None
+
 #  #   # ##### ### #     ### ##### #   #
 #  #   #   #    #  #      #    #   #   #
 #  #   #   #    #  #      #    #    # #
