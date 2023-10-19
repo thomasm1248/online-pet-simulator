@@ -1,15 +1,27 @@
 from datetime import datetime
 
-# Global variables
+#    ###  #      ###  ####   ###  #      ###
+#   #     #     #   # #   # #   # #     #
+#   #  ## #     #   # ####  ##### #      ###
+#   #   # #     #   # #   # #   # #         #
+#    #### #####  ###  ####  #   # #####  ###
 #
 # Any global variables we need
 
-# Util functions
+#  #   # ##### ### #     ### ##### #   #
+#  #   #   #    #  #      #    #   #   #
+#  #   #   #    #  #      #    #    # #
+#  #   #   #    #  #      #    #     #
+#   ###    #   ### ##### ###   #     #
 #
 # General purpose functions that will be used by other parts of the
 # program.
 
-# Program logic
+#  #      ###   ###  ###  ###
+#  #     #   # #      #  #   #
+#  #     #   # #  ##  #  #
+#  #     #   # #   #  #  #   #
+#  #####  ###   #### ###  ###
 #
 # Functions that handle the logic of the program.
 
@@ -30,6 +42,10 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
     for i in range(minutes):
         pet.tick()
 
-# Event handlers
+#  ##### #   # ##### #   # #####  ###
+#  #     #   # #     ##  #   #   #
+#  ####  #   # ####  # # #   #    ###
+#  #      # #  #     #  ##   #       #
+#  #####   #   ##### #   #   #    ###
 #
 # Functions that will be called when GUI events take place.
