@@ -1,5 +1,9 @@
 from datetime import datetime
 
+# Global variables
+#
+# Any global variables we need
+
 # Util functions
 #
 # General purpose functions that will be used by other parts of the
