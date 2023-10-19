@@ -11,6 +11,9 @@ from datetime import datetime
 # The variable that will hold the pet object
 pet = None
 
+# Constants
+DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
+
 #  #   # ##### ### #     ### ##### #   #
 #  #   #   #    #  #      #    #   #   #
 #  #   #   #    #  #      #    #    # #
@@ -22,7 +25,8 @@ pet = None
 
 def dateToText(date):
     """
-    Convert a date to a string using the format: %Y%m%d%H%M%S%f
+    Convert a date to a string using the format specified by
+    DATETIME_FORMAT.
 
     Args:
         date (datetime): the date to be converted
@@ -30,11 +34,12 @@ def dateToText(date):
     Returns:
         string: the string
     """
-    return date.strftime("%Y%m%d%H%M%S%f")
+    return date.strftime(DATETIME_FORMAT)
 
 def textToDate(text):
     """
-    Parse a date from a string using the format: %Y%m%d%H%M%S%f
+    Parse a date from a string using the format specified
+    by DATETIME_FORMAT.
 
     Args:
         text (string): the string to be parsed
@@ -42,7 +47,7 @@ def textToDate(text):
     Returns:
         datetime: parsed date
     """
-    return datetime.strptime(text, "%Y%m%d%H%M%S%f")
+    return datetime.strptime(text, DATETIME_FORMAT)
 
 #  #      ###   ###  ###  ###
 #  #     #   # #      #  #   #
