@@ -89,3 +89,28 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
 #   #####   #   ##### #   #   #    ###
 #
 # Functions that will be called when GUI events take place.
+
+
+
+#    ###  #   # ###
+#   #     #   #  #
+#   # ### #   #  #
+#   #   # #   #  #
+#    ####  ###  ###
+#
+# Functions that build the GUI, and setup event handlers
+
+def buildMenuWindow():
+    pass
+
+def buildAdoptionWindow():
+    pass
+
+def buildPetCareWindow():
+    pass
+
+def buildLocationWindow():
+    pass
+
+def buildAnnouncementWindow():
+    pass
