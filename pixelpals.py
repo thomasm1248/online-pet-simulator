@@ -176,3 +176,13 @@ def showDeathScreenWindow():
 
 def showStatsWindow():
     pass
+
+
+
+#   ### #   # ### #####
+#    #  ##  #  #    #
+#    #  # # #  #    #
+#    #  #  ##  #    #
+#   ### #   # ###   #
+#
+# Get everything running
