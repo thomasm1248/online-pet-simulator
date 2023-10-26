@@ -1,6 +1,8 @@
 from datetime import datetime
 from tkinter import *
 import json
+import time
+import threading
 
 
 
@@ -172,9 +174,14 @@ def endProgram():
     # Write the current state to the save file
     if state is not None:
         saveStateToFile()
-    # Close the current window
-    currentWindow.quit()
-    currentWindow.destroy()
+    # Close the current window if there is one
+    try:
+        currentWindow.quit()
+        currentWindow.destroy()
+    except:
+        pass
+    # Terminate the program
+    exit()
 
 def createNewPet():
     """
@@ -195,6 +202,21 @@ def createNewPet():
     # TODO
     # Switch to pet care window
     showPetCareWindow()
+
+def clockTick():
+    """
+    Tick the pet object if there is one, and update the state as needed. Automatically
+    save the state to the save file. This function only needs to be called once at the
+    start of the program, and it will keep ticking until the program closes.
+    """
+    # Debugging:
+    print("tick")
+    # Call the pet's tick method if the user has a pet
+    if state is not None:
+        state.pet.tick();
+        # TODO: save a snapshot of the pet's stats every hour or so
+    # Save the state to the save file
+    # TODO
 
 
 
@@ -233,8 +255,6 @@ def showMenuWindow():
     btnGiveUp.grid(row=3, column=0)
     if state is None:
         btnGiveUp["state"] = "disabled"
-    # Start the window
-    window.mainloop()
 
 def showAdoptionWindow():
     """
@@ -259,8 +279,6 @@ def showAdoptionWindow():
     # Create a submit button
     btnCreatePet = Button(window, text="Create Pet", command=createNewPet)
     btnCreatePet.grid(row=3, column=0)
-    # Start the window
-    window.mainloop()
 
 def showPetCareWindow():
     pass
@@ -293,5 +311,22 @@ def showStatsWindow():
 #
 # Get everything running
 
+# Set up the program
 readStateFromSaveFile()
 showMenuWindow()
+# Main loop
+timeOfLastTick = time.time()
+while 1:
+    time.sleep(0.01)
+    # Update the window
+    currentWindow.update_idletasks()
+    currentWindow.update()
+    # Make clock tick every minute
+    if time.time() - timeOfLastTick >= 60:
+        timeOfLastTick = time.time()
+        clockTick()
+    # Exit the program if the window was closed by the user
+    try:
+        currentWindow.winfo_exists() # throws an error if the window has been closed
+    except:
+        endProgram()
