@@ -14,6 +14,10 @@ import threading
 #
 # Any global variables we need
 
+# Flag that indicates that the program should keep running
+# Will be used by the main loop and the endProgram function
+keepRunning = True
+
 # State object - a more complicated version of the object that will be stored as JSON
 state = None
 
@@ -181,7 +185,8 @@ def endProgram():
     except:
         pass
     # Terminate the program
-    exit()
+    global keepRunning
+    keepRunning = False
 
 def createNewPet():
     """
@@ -255,6 +260,9 @@ def showMenuWindow():
     btnGiveUp.grid(row=3, column=0)
     if state is None:
         btnGiveUp["state"] = "disabled"
+    # Create a quit button
+    btnQuit = Button(window, text="Quit", command=endProgram)
+    btnQuit.grid(row=4, column=0)
 
 def showAdoptionWindow():
     """
@@ -316,7 +324,7 @@ readStateFromSaveFile()
 showMenuWindow()
 # Main loop
 timeOfLastTick = time.time()
-while 1:
+while keepRunning:
     time.sleep(0.01)
     # Update the window
     currentWindow.update_idletasks()
