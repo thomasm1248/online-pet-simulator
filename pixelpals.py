@@ -166,16 +166,6 @@ def endProgram():
 
 
 
-#   ##### #   # ##### #   # #####  ###
-#   #     #   # #     ##  #   #   #
-#   ####  #   # ####  # # #   #    ###
-#   #      # #  #     #  ##   #       #
-#   #####   #   ##### #   #   #    ###
-#
-# Functions that will be called when GUI events take place.
-
-
-
 #    ###  #   # ###
 #   #     #   #  #
 #   # ### #   #  #
