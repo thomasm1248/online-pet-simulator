@@ -137,7 +137,7 @@ def readStateFromSaveFile():
         file = open("pixelpalsave.json")
         global state
         state = json.load()
-        file.close();
+        file.close()
     except:
         return False
     # Instantiate a pet object
@@ -304,7 +304,18 @@ def showRandomEventWindow():
     pass
 
 def showDeathScreenWindow():
-    pass
+    """
+    Display a window that lets the user know that their pet has died.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Death")
+    # Create a label to let the user know their pet has died
+    lblInfo = Label(window, text="Your pet has died.")
+    lblInfo.grid(row=0, column=0)
+    # Create a button to switch to the stats window
+    btnViewStats = Button(window, text="View Stats", command=showStatsWindow)
+    btnViewStats.grid(row=1, column=0)
 
 def showStatsWindow():
     pass
