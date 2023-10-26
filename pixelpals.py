@@ -20,6 +20,18 @@ currentWindow = None
 
 # Constants
 DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
+PET_TYPES = [
+    "Cat",
+    "Dog",
+    "Fish",
+    "Lizard",
+    "Rock",
+    "Plant"
+]
+
+# StringVars for Tkinter Entry objects
+petName = None
+petType = None
 
 
 
@@ -164,6 +176,26 @@ def endProgram():
     currentWindow.quit()
     currentWindow.destroy()
 
+def createNewPet():
+    """
+    Called by pet adoption window when the submit button is clicked. Validate the
+    inputs entered in the adopion window, and if there are no problems, create a
+    new pet object, reset the current state object, and write to the save file.
+    Finish by switching to the pet care window.
+    """
+    # Get input from adoption window
+    # TODO
+    # Validate input
+    # TODO
+    # Instantiate a new pet object
+    # TODO
+    # Create a new state object
+    # TODO
+    # Write to the save file
+    # TODO
+    # Switch to pet care window
+    showPetCareWindow()
+
 
 
 #    ###  #   # ###
@@ -184,6 +216,8 @@ def showMenuWindow():
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
     btnNewPet.grid(row=0, column=0)
+    if state is not None:
+        btnNewPet["state"] = "disabled"
     # Create a pet care button
     btnPetCare = Button(window, text="Take Care of Pet", command=showPetCareWindow)
     btnPetCare.grid(row=1, column=0)
@@ -203,7 +237,30 @@ def showMenuWindow():
     window.mainloop()
 
 def showAdoptionWindow():
-    pass
+    """
+    Display the pet adoption window. This window is used to create a new pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("New Pet")
+    # Create a field to enter the pet's name
+    global petName
+    petName = StringVar()
+    entPetName = Entry(window, width=15, textvariable=petName)
+    entPetName.grid(row=0, column=0)
+    # Create a drop down list to select the pet type
+    global petType
+    petType = StringVar()
+    optPetType = OptionMenu(window, petType, *PET_TYPES)
+    optPetType.grid(row=1, column=0)
+    # Create a cancel button
+    btnCancel = Button(window, text="Cancel", command=showMenuWindow)
+    btnCancel.grid(row=2, column=0)
+    # Create a submit button
+    btnCreatePet = Button(window, text="Create Pet", command=createNewPet)
+    btnCreatePet.grid(row=3, column=0)
+    # Start the window
+    window.mainloop()
 
 def showPetCareWindow():
     pass
