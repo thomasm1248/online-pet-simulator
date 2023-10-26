@@ -150,17 +150,29 @@ def saveStateToFile():
 #
 # Functions that build the GUI, and setup event handlers
 
-def buildMenuWindow():
+def showMenuWindow():
     pass
 
-def buildAdoptionWindow():
+def showAdoptionWindow():
     pass
 
-def buildPetCareWindow():
+def showPetCareWindow():
     pass
 
-def buildLocationWindow():
+def showLocationWindow():
     pass
 
-def buildAnnouncementWindow():
+def showOutcomeWindow():
+    pass
+
+def showGiveUpWindow():
+    pass
+
+def showRandomEventWindow():
+    pass
+
+def showDeathScreenWindow():
+    pass
+
+def showStatsWindow():
     pass
