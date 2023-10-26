@@ -114,13 +114,11 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
         startTime (datetime): the start time
         endTime (datetime): the end time
     """
-    # Find the number of minutes between the two times
-    difference = endTime - startTime
-    minutes = difference.days * 24 * 60 + difference.seconds // 60
-    # Call the pet's tick method once for each minute
-    for i in range(minutes):
-        pet.tick()
-        # TODO: save a snapshot of pet stats each hour or so
+    # Advance the time by one minute, ticking the pet's clock each minute
+    currentTime = startTime
+    while currentTime < endTime:
+        currentTime += timedelta(0, 60) # advance 60 seconds
+        pet.tick(currentTime)
 
 def readStateFromSaveFile():
     """
@@ -218,7 +216,7 @@ def clockTick():
     print("tick")
     # Call the pet's tick method if the user has a pet
     if state is not None:
-        state.pet.tick();
+        state.pet.tick(datetime.now());
         # TODO: save a snapshot of the pet's stats every hour or so
     # Save the state to the save file
     # TODO
