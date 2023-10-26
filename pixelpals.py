@@ -12,7 +12,7 @@ import json
 #
 # Any global variables we need
 
-# State object
+# State object - a more complicated version of the object that will be stored as JSON
 state = None
 
 # Global variable to store a reference to the current window object
@@ -179,7 +179,7 @@ def endProgram():
 def createNewPet():
     """
     Called by pet adoption window when the submit button is clicked. Validate the
-    inputs entered in the adopion window, and if there are no problems, create a
+    inputs entered in the adoption window, and if there are no problems, create a
     new pet object, reset the current state object, and write to the save file.
     Finish by switching to the pet care window.
     """
@@ -293,4 +293,5 @@ def showStatsWindow():
 #
 # Get everything running
 
+readStateFromSaveFile()
 showMenuWindow()
