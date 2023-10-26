@@ -1,4 +1,5 @@
 from datetime import datetime
+from tkinter import *
 import json
 
 
@@ -13,6 +14,9 @@ import json
 
 # State object
 state = None
+
+# Global variable to store a reference to the current window object
+currentWindow = None
 
 # Constants
 DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
@@ -53,6 +57,24 @@ def textToDate(text):
         datetime: parsed date
     """
     return datetime.strptime(text, DATETIME_FORMAT)
+
+def newWindow():
+    """
+    Check if a window object is currently being stored in the "currentWindow" global,
+    and if there is, close it. After that, use Tkinter to create a new window
+    object, store it in the global variable, and return a reference to it.
+
+    Returns:
+        window object: the new window that has been created
+    """
+    global currentWindow
+    # Check if there is currently a window that needs to be closed
+    if currentWindow is not None:
+        currentWindow.quit()
+        currentWindow.destroy()
+    # Create and return a new window
+    currentWindow = Tk()
+    return currentWindow
 
 
 
@@ -130,6 +152,18 @@ def saveStateToFile():
     json.dump(saveData, file)
     file.close()
 
+def endProgram():
+    """
+    Complete the necessary steps to end the program. Write to the save file,
+    and close the current window.
+    """
+    # Write the current state to the save file
+    if state is not None:
+        saveStateToFile()
+    # Close the current window
+    currentWindow.quit()
+    currentWindow.destroy()
+
 
 
 #   ##### #   # ##### #   # #####  ###
@@ -151,7 +185,32 @@ def saveStateToFile():
 # Functions that build the GUI, and setup event handlers
 
 def showMenuWindow():
-    pass
+    """
+    Display the main menu window, and set up event handlers for the buttons.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Pixel Pals")
+    # Create a new pet button
+    btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
+    btnNewPet.grid(row=0, column=0)
+    # Create a pet care button
+    btnPetCare = Button(window, text="Take Care of Pet", command=showPetCareWindow)
+    btnPetCare.grid(row=1, column=0)
+    if state is None:
+        btnPetCare["state"] = "disabled"
+    # Create a go somewhere button
+    btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
+    btnGoSomewhere.grid(row=2, column=0)
+    if state is None:
+        btnGoSomewhere["state"] = "disabled"
+    # Create a give up button
+    btnGiveUp = Button(window, text="Give Up", command=showGiveUpWindow)
+    btnGiveUp.grid(row=3, column=0)
+    if state is None:
+        btnGiveUp["state"] = "disabled"
+    # Start the window
+    window.mainloop()
 
 def showAdoptionWindow():
     pass
@@ -186,3 +245,5 @@ def showStatsWindow():
 #   ### #   # ###   #
 #
 # Get everything running
+
+showMenuWindow()
