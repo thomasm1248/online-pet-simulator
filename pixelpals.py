@@ -287,18 +287,70 @@ def showAdoptionWindow():
     btnCreatePet.grid(row=3, column=0)
 
 def showPetCareWindow():
-    pass
+    """
+    Display the pet care window. This window is used to take care of the pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Pet Care")
+    # Create Play Button
+    btnPlay = Button(window, text="Play") # Still need to add command
+    btnPlay.grid(row=0, column=0)
+    # Create Feed Button
+    btnFeed = Button(window, text="Feed") # Still need to add command
+    btnFeed.grid(row=0, column=1)
+    # Create Water Button
+    btnWater = Button(window, text="Water") # Still need to add command
+    btnWater.grid(row=0, column=2)
+    # Create Bathe Button
+    btnBathe = Button(window, text="Bathe") # Still need to add command
+    btnBathe.grid(row=0, column=3)
+    # Create Go Somewhere Button
+    btnGoSomewhere = Button(window, text="Go Somewhere") # Still need to add command
+    btnGoSomewhere.grid(row=0, column=4)
 
 def showLocationWindow():
+    """
+    Display the location window. This window is used to go somewhere with your pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Location")
     pass
 
 def showOutcomeWindow():
+    """
+    Display the outcome window. This window is used to display the outcome of going somewhere with your pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Outcome")
     pass
 
 def showGiveUpWindow():
-    pass
+    """
+    Display the Give Up window. This window is used to give up on your pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Give Up")
+    # Create a label to ask the user if they want to give up on their pet
+    lblGiveUp = Label(window, text="Would you like to give up on your pet?")
+    lblGiveUp.grid(row=0, column=0)
+    # Create a button for yes
+    btnYes = Button(window, text="Yes") # Still need to add command
+    btnYes.grid(row=1, column=0)
+    # Create a button for no
+    btnNo = Button(window, text="No") # Still need to add command
+    btnNo.grid(row=1, column=1)
 
 def showRandomEventWindow():
+    """
+    Display the random event window. This window is used to display a random event with your pet.
+    """
+    # Create a new window
+    window = newWindow()
+    window.title("Random Event")
     pass
 
 def showDeathScreenWindow():
