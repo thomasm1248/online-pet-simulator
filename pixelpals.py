@@ -306,7 +306,7 @@ def showPetCareWindow():
     btnBathe = Button(window, text="Bathe") # Still need to add command
     btnBathe.grid(row=0, column=3)
     # Create Go Somewhere Button
-    btnGoSomewhere = Button(window, text="Go Somewhere") # Still need to add command
+    btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
     btnGoSomewhere.grid(row=0, column=4)
 
 def showLocationWindow():
