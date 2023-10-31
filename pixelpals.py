@@ -221,6 +221,21 @@ def clockTick():
     # Save the state to the save file
     # TODO
 
+def feedPet():
+    pass
+
+def waterPet():
+    pass
+
+def cleanPet():
+    pass
+
+def playWithPet():
+    pass
+
+def takePetToVet():
+    pass
+
 
 
 #    ###  #   # ###
