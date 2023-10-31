@@ -336,17 +336,19 @@ def showLocationWindow():
     Lb.insert(2, 'Vet')
     Lb.insert(3, 'Walk')
     Lb.insert(4, 'Grandmas House')
+    btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
     Lb.pack()
-    btnGo = Button(window, text="Lets Go!", command=showOutcomeWindow)
     btnGo.pack()
 
-def showOutcomeWindow():
+def showOutcomeWindow(location):
     """
     Display the outcome window. This window is used to display the outcome of going somewhere with your pet.
     """
     # Create a new window
     window = newWindow()
     window.title("Outcome")
+    label1 = Label(text="You went to " + location)
+    label1.pack()
     pass
 
 def showGiveUpWindow():
