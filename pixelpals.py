@@ -331,7 +331,14 @@ def showLocationWindow():
     # Create a new window
     window = newWindow()
     window.title("Location")
-    pass
+    Lb = Listbox(window)
+    Lb.insert(1, 'Dog Park')
+    Lb.insert(2, 'Vet')
+    Lb.insert(3, 'Walk')
+    Lb.insert(4, 'Grandmas House')
+    Lb.pack()
+    btnGo = Button(window, text="Lets Go!", command=showOutcomeWindow)
+    btnGo.pack()
 
 def showOutcomeWindow():
     """
