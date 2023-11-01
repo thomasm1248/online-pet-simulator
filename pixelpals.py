@@ -1,5 +1,6 @@
 from datetime import datetime
 from tkinter import *
+from tkinter import filedialog
 import json
 import time
 import threading
@@ -34,6 +35,10 @@ PET_TYPES = [
     "Rock",
     "Plant"
 ]
+
+# A reference to the label on the adoption window that contains the filename
+# of the image that will represent the pet
+lblFilename = None
 
 # StringVars for Tkinter Entry objects
 petName = None
@@ -294,12 +299,21 @@ def showAdoptionWindow():
     petType = StringVar()
     optPetType = OptionMenu(window, petType, *PET_TYPES)
     optPetType.grid(row=1, column=0)
+    # Create a button for selecting an image for the pet
+    global lblFilename
+    def browse():
+        filename = filedialog.askopenfilename()
+        lblFilename.config(text=filename)
+    btnBrowse = Button(window, text="Browse", command=browse)
+    btnBrowse.grid(row=2, column=0)
+    lblFilename = Label(window)
+    lblFilename.grid(row=2, column=1)
     # Create a cancel button
     btnCancel = Button(window, text="Cancel", command=showMenuWindow)
-    btnCancel.grid(row=2, column=0)
+    btnCancel.grid(row=3, column=0)
     # Create a submit button
     btnCreatePet = Button(window, text="Create Pet", command=createNewPet)
-    btnCreatePet.grid(row=3, column=0)
+    btnCreatePet.grid(row=4, column=0)
 
 def showPetCareWindow():
     """
