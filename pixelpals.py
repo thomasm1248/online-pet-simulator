@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from tkinter import *
 from tkinter import filedialog
 import json
@@ -112,18 +112,15 @@ def newWindow():
 #
 # Functions that handle the logic of the program.
 
-def simulateEffectOfTimeOnPet(pet, startTime, endTime):
+def simulateEffectOfTimeOnPet():
     """
     Apply time to pet by calling the pet's update method once per
-    minute from the start time to the end time.
-
-    Args:
-        pet (pet object): the pet
-        startTime (datetime): the start time
-        endTime (datetime): the end time
+    minute from the time the pet was last updated to the current time.
     """
     print("Similating pet since app last opened... ", end="")
     # Advance the time by one minute, ticking the pet's clock each minute
+    startTime = pet.last_update
+    endTime = datetime.now()
     try:
         currentTime = startTime
         while currentTime < endTime:
@@ -358,6 +355,9 @@ def showPetCareWindow():
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
     btnGoSomewhere.grid(row=0, column=4)
+    # Create Return to Menu button
+    btnMenu = Button(window, text="Back", command=showMenuWindow)
+    btnMenu.grid(row=1, column=0)
 
 def showLocationWindow():
     """
@@ -441,6 +441,9 @@ def showStatsWindow():
 
 # Set up the program - might open the death window
 readStateFromSaveFile()
+# Make time pass since program was last opened
+if pet is not None:
+    simulateEffectOfTimeOnPet()
 # Show the main menu window if no other window is shown
 if currentWindow is None:
     showMenuWindow()
