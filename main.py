@@ -25,5 +25,7 @@ def main():
     
     pprint(rock.current_stats())
     
+    rock.plot_stats('assets/temp/plot.png')
+    
 if __name__=="__main__":
     main()

@@ -3,6 +3,9 @@ import json
 import random
 import datetime
 import math
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 # this exception is raised when a pet passes away
 class PassedAway(Exception):
@@ -196,6 +199,38 @@ class Pet(ABC):
     pet.lifetime_stats: dict[str, list[float]] = {stat : [1.0] for stat in cls.STATS}
     
     return pet
+  
+  def plot_stats(self, temp_file_name, convolve = True):
+    # plotting variables
+    number_of_minutes = len(self.lifetime_stats['health'])
+    time_axis = pd.date_range(self.adoption_time, self.last_update, periods=number_of_minutes).to_pydatetime()
+    
+    # smoothing variables
+    smooth_kernel = [1/8, 3/4, 1/8]
+    weights = np.convolve(np.ones(number_of_minutes), smooth_kernel, mode="same")
+    
+    # plot each stat
+    for stat, values in self.lifetime_stats.items():
+      values = np.array(values)
+      
+      # make the plot smooth
+      if convolve:
+        for _ in range(10):
+          values = np.convolve(values, smooth_kernel, mode='same') / weights
+          
+      plt.plot(time_axis, values, label = stat)
+    
+    # make the plot nicer
+    plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+    plt.legend()
+    plt.xlabel("Time")
+    plt.ylabel("Pet Levels")
+    plt.savefig(temp_file_name)
+      
+    
+    
+    
+    
   
 
       
