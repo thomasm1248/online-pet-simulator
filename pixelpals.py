@@ -366,11 +366,12 @@ def showLocationWindow():
     # Create a new window
     window = newWindow()
     window.title("Location")
+    # Create the listbox containing locations to go to
     Lb = Listbox(window)
     Lb.insert(1, 'Dog Park')
     Lb.insert(2, 'Vet')
     Lb.insert(3, 'Walk')
-    Lb.insert(4, 'Grandmas House')
+    # Create a button to confirm selected location in listbox
     btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
     Lb.pack()
     btnGo.pack()
@@ -382,9 +383,20 @@ def showOutcomeWindow(location):
     # Create a new window
     window = newWindow()
     window.title("Outcome")
-    label1 = Label(text="You went to " + location)
-    label1.pack()
-    pass
+    # Display the location you went with your pet
+    labelYouWent = Label(text="You went to " + location)
+    labelYouWent.pack()
+    # Change stats based on the location you went to
+    if location == 'Dog Park':
+        playWithPet()  # Currently just have play because I'm unsure how we want it
+    elif location == 'Vet':
+        takePetToVet()
+    elif location == 'Walk':
+        playWithPet()  # Currently just have play because I'm unsure how we want it
+
+    # Create a button to go back to the petcare window
+    btnGoBack = Button(window, text="Return Home", command=showPetCareWindow)
+    btnGoBack.pack()
 
 def showGiveUpWindow():
     """
@@ -395,13 +407,13 @@ def showGiveUpWindow():
     window.title("Give Up")
     # Create a label to ask the user if they want to give up on their pet
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
-    lblGiveUp.grid(row=0, column=0)
+    lblGiveUp.grid(row=0, column=0, columnspan=2)
     # Create a button for yes
     btnYes = Button(window, text="Yes") # Still need to add command
-    btnYes.grid(row=1, column=0)
+    btnYes.grid(sticky=E, row=1, column=0)
     # Create a button for no
-    btnNo = Button(window, text="No") # Still need to add command
-    btnNo.grid(row=1, column=1)
+    btnNo = Button(window, text="No", command=showMenuWindow)
+    btnNo.grid(sticky=W, row=1, column=1)
 
 def showRandomEventWindow():
     """
