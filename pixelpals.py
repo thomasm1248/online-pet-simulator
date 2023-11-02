@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from tkinter import *
 from tkinter import filedialog
@@ -24,6 +25,10 @@ keepRunning = True
 
 # The pet object if there is one
 pet = None
+
+# Instead of deleting the pet when it dies, move it here so that
+# the stats window still has access to it
+deadPet = None
 
 # Global variable to store a reference to the current window object
 currentWindow = None
@@ -239,8 +244,13 @@ def petDied(time, message):
         time (datetime): time the pet died
         message (string): a message to show the user
     """
+    # Kill the pet
+    global deadPet
+    global pet
+    deadPet = pet
+    pet = None
     # Delete save file
-    # TODO
+    os.remove("pixelpalsave.json")
     # Switch to death screen
     showDeathScreenWindow(time, message)
 
@@ -461,6 +471,7 @@ def showDeathScreenWindow(time, message):
     btnViewStats.grid(row=2, column=0)
 
 def showStatsWindow():
+    # TODO use the deadPet global to access the pet, not the pet global
     pass
 
 
