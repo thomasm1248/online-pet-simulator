@@ -427,7 +427,7 @@ def showStatsWindow():
 # Set up the program - might open the death window
 readStateFromSaveFile()
 # Show the main menu window if no other window is shown
-if window is None:
+if currentWindow is None:
     showMenuWindow()
 # Main loop
 timeOfLastTick = time.time()
