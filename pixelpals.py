@@ -6,6 +6,7 @@ import time
 import threading
 from pets import *
 from pprint import pprint
+import pet_events.some_events as PetEvents
 
 
 
@@ -233,19 +234,33 @@ def clockTick():
     # TODO
 
 def feedPet():
-    pass
+    """
+    Called by the feed button on the pet care window.
+    """
+    PetEvents.feed(pet, 1.0)
 
 def waterPet():
-    pass
+    """
+    Called by the water button on the pet care window.
+    """
+    PetEvents.hydrate(pet, 1.0)
 
 def cleanPet():
-    pass
+    """
+    Called by the clean button on the pet care window.
+    """
+    PetEvents.clean(pet, 1.0)
 
 def playWithPet():
-    pass
+    """
+    Called by the play button on the pet care window.
+    """
+    PetEvents.play(pet, 1.0)
 
 def takePetToVet():
-    pass
+    """
+    """
+    PetEvents.medicate(pet, 1.0)
 
 
 
