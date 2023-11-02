@@ -43,6 +43,7 @@ PET_TYPES = [
     "Rock",
     "Plant"
 ]
+SAVEFILE_FLOAT_PRECISION = 4
 
 # A reference to the label on the adoption window that contains the filename
 # of the image that will represent the pet
@@ -121,7 +122,7 @@ def round_floats(o):
         https://til.simonwillison.net/python/json-floating-point
     """
     if isinstance(o, float):
-        return round(o, 5)
+        return round(o, SAVEFILE_FLOAT_PRECISION)
     if isinstance(o, dict):
         return {k: round_floats(v) for k, v in o.items()}
     if isinstance(o, (list, tuple)):
@@ -197,7 +198,7 @@ def saveStateToFile():
     petDict['last_update'] = dateToText(petDict['last_update'])
     # Save the save data to a file
     file = open("pixelpalsave.json", "w")
-    json.dump(petDict, file)
+    json.dump(round_floats(petDict), file)
     file.close()
 
 def endProgram():
