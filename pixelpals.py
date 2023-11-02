@@ -358,6 +358,9 @@ def showPetCareWindow():
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
     btnGoSomewhere.grid(row=0, column=4)
+    # Create Return to Menu button
+    btnMenu = Button(window, text="Back", command=showMenuWindow)
+    btnMenu.grid(row=1, column=0)
 
 def showLocationWindow():
     """
