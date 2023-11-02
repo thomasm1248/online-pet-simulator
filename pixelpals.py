@@ -121,13 +121,16 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
         startTime (datetime): the start time
         endTime (datetime): the end time
     """
+    print("Similating pet since app last opened... ", end="")
     # Advance the time by one minute, ticking the pet's clock each minute
     try:
         currentTime = startTime
         while currentTime < endTime:
             currentTime += timedelta(0, 60) # advance 60 seconds
             pet.update(currentTime)
+        print("Done.")
     except(PassedAway):
+        print("Pet passed away while you were gone.")
         showDeathScreenWindow(currentTime)
 
 def readStateFromSaveFile():
@@ -144,9 +147,11 @@ def readStateFromSaveFile():
     try:
         file = open("pixelpalsave.json")
         global pet
-        pet = json.load()
+        pet = json.load(file)
         file.close()
+        print("Pet data found.")
     except:
+        print("No pet found.")
         return False
     # Convert dates to datetime objects
     pet['adoption_time'] = textToDate(pet['adoption_time'])
@@ -163,7 +168,6 @@ def saveStateToFile():
     """
     # Convert the pet object to a dict
     petDict = pet.serialize()
-    pprint(petDict)
     # Convert datetime objects to strings
     petDict['adoption_time'] = dateToText(petDict['adoption_time'])
     petDict['last_update'] = dateToText(petDict['last_update'])
