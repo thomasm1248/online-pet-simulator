@@ -1,0 +1,65 @@
+{
+    "dog": 
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 0.7
+    },
+    "cat": 
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 0.5
+    },
+    "fish": 
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 0.9
+    },
+    "lizzard": 
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 0.1
+    },
+    "plant": 
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 0.3
+    },
+    "rock": 
+    {
+        "hunger_rate": 10, 
+        "hydration_rate": 10, 
+        "love_rate": 10, 
+        "hygiene_rate": 10, 
+        "health_rate": 10,
+        "sleep_efficiency": 1
+    },
+    "default":
+    {
+        "hunger_rate": 1, 
+        "hydration_rate": 1, 
+        "love_rate": 1, 
+        "hygiene_rate": 1, 
+        "health_rate": 1,
+        "sleep_efficiency": 1
+    }
+}
