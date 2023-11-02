@@ -4,6 +4,7 @@ from tkinter import filedialog
 import json
 import time
 import threading
+from pets import *
 
 
 
@@ -120,10 +121,13 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
         endTime (datetime): the end time
     """
     # Advance the time by one minute, ticking the pet's clock each minute
-    currentTime = startTime
-    while currentTime < endTime:
-        currentTime += timedelta(0, 60) # advance 60 seconds
-        pet.tick(currentTime)
+    try:
+        currentTime = startTime
+        while currentTime < endTime:
+            currentTime += timedelta(0, 60) # advance 60 seconds
+            pet.tick(currentTime)
+    except(PassedAway):
+        showDeathScreenWindow(currentTime)
 
 def readStateFromSaveFile():
     """
@@ -221,8 +225,10 @@ def clockTick():
     print("tick")
     # Call the pet's tick method if the user has a pet
     if state is not None:
-        state.pet.tick(datetime.now());
-        # TODO: save a snapshot of the pet's stats every hour or so
+        try:
+            state.pet.tick(datetime.now())
+        except(PassedAway):
+            showDeathScreenWindow(datetime.now())
     # Save the state to the save file
     # TODO
 
@@ -418,9 +424,11 @@ def showStatsWindow():
 #
 # Get everything running
 
-# Set up the program
+# Set up the program - might open the death window
 readStateFromSaveFile()
-showMenuWindow()
+# Show the main menu window if no other window is shown
+if window is None:
+    showMenuWindow()
 # Main loop
 timeOfLastTick = time.time()
 while keepRunning:
