@@ -127,9 +127,9 @@ def simulateEffectOfTimeOnPet():
             currentTime += timedelta(0, 60) # advance 60 seconds
             pet.update(currentTime)
         print("Done.")
-    except(PassedAway):
+    except PassedAway as ex:
         print("Pet passed away while you were gone.")
-        showDeathScreenWindow(currentTime)
+        petDied(currentTime, ex)
 
 def readStateFromSaveFile():
     """
@@ -225,10 +225,24 @@ def clockTick():
     if pet is not None:
         try:
             pet.update(datetime.now())
-        except(PassedAway):
-            showDeathScreenWindow(datetime.now())
+        except PassedAway as ex:
+            petDied(datetime.now(), ex)
+
     # Save the state to the save file
     # TODO
+
+def petDied(time, message):
+    """
+    Called whenever the pet dies. Delete the save file, and switch to the death screen.
+    
+    Args:
+        time (datetime): time the pet died
+        message (string): a message to show the user
+    """
+    # Delete save file
+    # TODO
+    # Switch to death screen
+    showDeathScreenWindow(time, message)
 
 def feedPet():
     """
@@ -424,19 +438,27 @@ def showRandomEventWindow():
     window.title("Random Event")
     pass
 
-def showDeathScreenWindow():
+def showDeathScreenWindow(time, message):
     """
     Display a window that lets the user know that their pet has died.
+
+    Args:
+        time (datetime): date/time the pet died
+        message (string): a message to give to the user
     """
     # Create a new window
     window = newWindow()
     window.title("Death")
     # Create a label to let the user know their pet has died
-    lblInfo = Label(window, text="Your pet has died.")
+    lblInfo = Label(window, text=message)
     lblInfo.grid(row=0, column=0)
+    # Create a label to let the user know when their pet died
+    timeString = time.strftime("Passed away %b %d, at %I:%M %p")
+    lblDate = Label(window, text=timeString)
+    lblDate.grid(row=1, column=0)
     # Create a button to switch to the stats window
     btnViewStats = Button(window, text="View Stats", command=showStatsWindow)
-    btnViewStats.grid(row=1, column=0)
+    btnViewStats.grid(row=2, column=0)
 
 def showStatsWindow():
     pass
