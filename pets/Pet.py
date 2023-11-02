@@ -170,7 +170,7 @@ class Pet(ABC):
     # Guard Clause: No instances of an abstract class, find the apropiate subclass
     if cls == Pet:
       sub_cls = cls.find_subclass(TYPE)
-      return sub_cls.adoptadopt(cls, name, price, adoption_time, picture_path)
+      return sub_cls.adopt(name, price, adoption_time, picture_path)
     
     # Creating the pet    
     pet = cls()

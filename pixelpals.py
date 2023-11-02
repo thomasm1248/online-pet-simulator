@@ -5,6 +5,7 @@ import json
 import time
 import threading
 from pets import *
+from pprint import pprint
 
 
 
@@ -148,8 +149,8 @@ def readStateFromSaveFile():
     except:
         return False
     # Convert dates to datetime objects
-    pet.adoption_time = textToDate(pet.adoption_time)
-    pet.last_update = textToDate(pet.last_update)
+    pet['adoption_time'] = textToDate(pet['adoption_time'])
+    pet['last_update'] = textToDate(pet['last_update'])
     # Instantiate a pet object
     pet = Pet.deserialize(pet)
     # Since there was a save file, return True
@@ -162,9 +163,10 @@ def saveStateToFile():
     """
     # Convert the pet object to a dict
     petDict = pet.serialize()
+    pprint(petDict)
     # Convert datetime objects to strings
-    petDict.adoption_time = dateToText(petDict.adoption_time)
-    petDict.last_update = dateToText(petDict.last_update)
+    petDict['adoption_time'] = dateToText(petDict['adoption_time'])
+    petDict['last_update'] = dateToText(petDict['last_update'])
     # Save the save data to a file
     file = open("pixelpalsave.json", "w")
     json.dump(petDict, file)
@@ -192,19 +194,20 @@ def createNewPet():
     """
     Called by pet adoption window when the submit button is clicked. Validate the
     inputs entered in the adoption window, and if there are no problems, create a
-    new pet object, reset the current state object, and write to the save file.
-    Finish by switching to the pet care window.
+    new pet object, and write to the save file. Finish by switching to the pet
+    care window.
     """
     # Get input from adoption window
-    # TODO
+    name = petName.get()
+    petTypeName = petType.get().lower()
+    file = lblFilename["text"]
     # Validate input
     # TODO
     # Instantiate a new pet object
-    # TODO
-    # Create a new state object
-    # TODO
+    global pet
+    pet = Pet.adopt(name, 1000, datetime.now(), file, TYPE=petTypeName)
     # Write to the save file
-    # TODO
+    saveStateToFile()
     # Switch to pet care window
     showPetCareWindow()
 
