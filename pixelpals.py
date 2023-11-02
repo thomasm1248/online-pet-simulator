@@ -107,6 +107,27 @@ def newWindow():
     currentWindow = Tk()
     return currentWindow
 
+def round_floats(o):
+    """
+    Rounds all the floats in an object.
+
+    Args:
+        o (object): the object containing floats
+    
+    Returns:
+        object: same object, but with rounded floats
+
+    Source:
+        https://til.simonwillison.net/python/json-floating-point
+    """
+    if isinstance(o, float):
+        return round(o, 5)
+    if isinstance(o, dict):
+        return {k: round_floats(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [round_floats(x) for x in o]
+    return o
+
 
 
 #   #      ###   ###  ###  ###
