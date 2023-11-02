@@ -20,8 +20,8 @@ from pets import *
 # Will be used by the main loop and the endProgram function
 keepRunning = True
 
-# State object - a more complicated version of the object that will be stored as JSON
-state = None
+# The pet object if there is one
+pet = None
 
 # Global variable to store a reference to the current window object
 currentWindow = None
@@ -112,7 +112,7 @@ def newWindow():
 
 def simulateEffectOfTimeOnPet(pet, startTime, endTime):
     """
-    Apply time to pet by calling the pet's tick method once per
+    Apply time to pet by calling the pet's update method once per
     minute from the start time to the end time.
 
     Args:
@@ -125,56 +125,49 @@ def simulateEffectOfTimeOnPet(pet, startTime, endTime):
         currentTime = startTime
         while currentTime < endTime:
             currentTime += timedelta(0, 60) # advance 60 seconds
-            pet.tick(currentTime)
+            pet.update(currentTime)
     except(PassedAway):
         showDeathScreenWindow(currentTime)
 
 def readStateFromSaveFile():
     """
-    Read the save file if there is one, and put the data in the global state
-    variable. Certain values will be converted to a form more useable by the
-    rest of the program. This function is designed be be run at the start of
-    the program.
+    Attempt to read the pet from the save file. Return boolean indicating success.
+    Uses Pet.deserialize to convert the JSON dictionary to a pet object, and
+    converts the date strings to datetime objects.
 
     Returns:
         boolean: true if save file successfully read
     """
     # Read data from the file, return False upon failure
+    global pet
     try:
         file = open("pixelpalsave.json")
-        global state
-        state = json.load()
+        global pet
+        pet = json.load()
         file.close()
     except:
         return False
-    # Instantiate a pet object
-    # TODO
     # Convert dates to datetime objects
-    state.initial_date = textToDate(state.initial_date)
-    state.save_date = textToDate(state.save_date)
+    pet.adoption_time = textToDate(pet.adoption_time)
+    pet.last_update = textToDate(pet.last_update)
+    # Instantiate a pet object
+    pet = Pet.deserialize(pet)
     # Since there was a save file, return True
     return True
 
 def saveStateToFile():
     """
-    Save the current state to a save file. The current state can be found
-    in the global state variable. Certain values will be converted into a
-    format more JSON friendly. This function is designed be be run
-    multiple times throughout the execution of the program.
+    Convert the pet object to dictionary, convert the datetime objects to strings,
+    then write the dict to the save file as JSON.
     """
-    # Create a data object that will be converted to JSON
-    saveData = {}
-    # Store some of the simpler objects
-    saveData.initial_date = dateToText(state.initial_date)
-    saveData.save_date = datetime.now()
-    saveData.money = state.money
-    # Make a simpler copy of the pet object
-    saveData.pet = None # TODO
-    # Store the statistics
-    saveData.pet_stats = state.pet_stats
+    # Convert the pet object to a dict
+    petDict = pet.serialize()
+    # Convert datetime objects to strings
+    petDict.adoption_time = dateToText(petDict.adoption_time)
+    petDict.last_update = dateToText(petDict.last_update)
     # Save the save data to a file
     file = open("pixelpalsave.json", "w")
-    json.dump(saveData, file)
+    json.dump(petDict, file)
     file.close()
 
 def endProgram():
@@ -183,7 +176,7 @@ def endProgram():
     and close the current window.
     """
     # Write the current state to the save file
-    if state is not None:
+    if pet is not None:
         saveStateToFile()
     # Close the current window if there is one
     try:
@@ -224,9 +217,9 @@ def clockTick():
     # Debugging:
     print("tick")
     # Call the pet's tick method if the user has a pet
-    if state is not None:
+    if pet is not None:
         try:
-            state.pet.tick(datetime.now())
+            pet.update(datetime.now())
         except(PassedAway):
             showDeathScreenWindow(datetime.now())
     # Save the state to the save file
@@ -267,22 +260,22 @@ def showMenuWindow():
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
     btnNewPet.grid(row=0, column=0)
-    if state is not None:
+    if pet is not None:
         btnNewPet["state"] = "disabled"
     # Create a pet care button
     btnPetCare = Button(window, text="Take Care of Pet", command=showPetCareWindow)
     btnPetCare.grid(row=1, column=0)
-    if state is None:
+    if pet is None:
         btnPetCare["state"] = "disabled"
     # Create a go somewhere button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
     btnGoSomewhere.grid(row=2, column=0)
-    if state is None:
+    if pet is None:
         btnGoSomewhere["state"] = "disabled"
     # Create a give up button
     btnGiveUp = Button(window, text="Give Up", command=showGiveUpWindow)
     btnGiveUp.grid(row=3, column=0)
-    if state is None:
+    if pet is None:
         btnGiveUp["state"] = "disabled"
     # Create a quit button
     btnQuit = Button(window, text="Quit", command=endProgram)
