@@ -434,11 +434,11 @@ def showOutcomeWindow(location):
     labelYouWent.pack()
     # Change stats based on the location you went to
     if location == 'Dog Park':
-        playWithPet()  # Currently just have play because I'm unsure how we want it
+        playWithPet()  # TODO change to correct method
     elif location == 'Vet':
         takePetToVet()
     elif location == 'Walk':
-        playWithPet()  # Currently just have play because I'm unsure how we want it
+        playWithPet()  # TODO change to correct method
 
     # Create a button to go back to the petcare window
     btnGoBack = Button(window, text="Return Home", command=showPetCareWindow)
@@ -455,7 +455,7 @@ def showGiveUpWindow():
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
     lblGiveUp.grid(row=0, column=0, columnspan=2)
     # Create a button for yes
-    btnYes = Button(window, text="Yes") # Still need to add command
+    btnYes = Button(window, text="Yes") # TODO add command
     btnYes.grid(sticky=E, row=1, column=0)
     # Create a button for no
     btnNo = Button(window, text="No", command=showMenuWindow)
