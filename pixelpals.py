@@ -276,6 +276,13 @@ def petDied(time, message):
     # Switch to death screen
     showDeathScreenWindow(time, message)
 
+def giveUpOnPet():
+    """
+    Called by the giveUpOnPet window when the user confirms that they want to give
+    up on their pet. Make the pet die.
+    """
+    petDied(datetime.now(), "You gave up on %s." % pet.name)
+
 def feedPet():
     """
     Called by the feed button on the pet care window.
@@ -455,7 +462,11 @@ def showGiveUpWindow():
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
     lblGiveUp.grid(row=0, column=0, columnspan=2)
     # Create a button for yes
+<<<<<<< HEAD
     btnYes = Button(window, text="Yes") # TODO add command
+=======
+    btnYes = Button(window, text="Yes", command=giveUpOnPet)
+>>>>>>> a5cfb6a (Make it possible to give up on pet)
     btnYes.grid(sticky=E, row=1, column=0)
     # Create a button for no
     btnNo = Button(window, text="No", command=showMenuWindow)
