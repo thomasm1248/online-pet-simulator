@@ -39,7 +39,7 @@ PET_TYPES = [
     "Cat",
     "Dog",
     "Fish",
-    "Lizard",
+    "Lizzard",
     "Rock",
     "Plant"
 ]
@@ -462,11 +462,7 @@ def showGiveUpWindow():
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
     lblGiveUp.grid(row=0, column=0, columnspan=2)
     # Create a button for yes
-<<<<<<< HEAD
-    btnYes = Button(window, text="Yes") # TODO add command
-=======
     btnYes = Button(window, text="Yes", command=giveUpOnPet)
->>>>>>> a5cfb6a (Make it possible to give up on pet)
     btnYes.grid(sticky=E, row=1, column=0)
     # Create a button for no
     btnNo = Button(window, text="No", command=showMenuWindow)
