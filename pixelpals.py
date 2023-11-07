@@ -49,6 +49,10 @@ SAVEFILE_FLOAT_PRECISION = 4
 # of the image that will represent the pet
 lblFilename = None
 
+# A list of label objects if the petCare window is open. Each label object
+# should show a percentage of the stat as a string
+statLabels = None
+
 # StringVars for Tkinter Entry objects
 petName = None
 petType = None
@@ -240,6 +244,20 @@ def createNewPet():
     # Switch to pet care window
     showPetCareWindow()
 
+def updateStatLabels():
+    """
+    Update the labels on the pet care window to show the current state of the pet.
+    Don't do anything unless the pet care window is currently being shown.
+    """
+    # Abort if the pet care window isn't being shown
+    if currentWindow.title() != "Pet Care":
+        return
+    # Get the current state of the pet
+    currentStats = pet.current_stats()
+    # Update the labels
+    for statName, value in currentStats.items():
+        statLabels[statName].config(text=("%.0f%%" % (value * 100)))
+
 def clockTick():
     """
     Tick the pet object if there is one, and update the state as needed. Automatically
@@ -251,7 +269,10 @@ def clockTick():
     # Call the pet's tick method if the user has a pet
     if pet is not None:
         try:
+            # Update pet
             pet.update(datetime.now())
+            # Update pet status labels if the pet care window is being displayed
+            updateStatLabels()
         except PassedAway as ex:
             petDied(datetime.now(), ex)
 
@@ -393,24 +414,43 @@ def showPetCareWindow():
     # Create a new window
     window = newWindow()
     window.title("Pet Care")
+    # Create pet name label
+    lblPetName = Label(window, text=pet.name)
+    lblPetName.grid(row=0, column=0, columnspan=3)
+    # Create pet status labels
+    global statLabels
+    statLabels = {}
+    row = 1
+    for statName in Pet.STATS:
+        # Create label for the name of the stat
+        lblStatName = Label(window, text=(statName.title() + ": "))
+        lblStatName.grid(row=row, column=0, sticky=E)
+        # Create label for the percentage of the stat
+        lblStatPercent = Label(window)
+        lblStatPercent.grid(row=row, column=1, sticky=E)
+        # Add stat percent label to global 
+        statLabels[statName] = lblStatPercent
+        # Move to next row
+        row += 1
+    updateStatLabels()
     # Create Play Button
     btnPlay = Button(window, text="Play", command=playWithPet)
-    btnPlay.grid(row=0, column=0)
+    btnPlay.grid(row=4, column=2)
     # Create Feed Button
     btnFeed = Button(window, text="Feed", command=feedPet)
-    btnFeed.grid(row=0, column=1)
+    btnFeed.grid(row=2, column=2)
     # Create Water Button
     btnWater = Button(window, text="Water", command=waterPet)
-    btnWater.grid(row=0, column=2)
+    btnWater.grid(row=1, column=2)
     # Create Bathe Button
     btnBathe = Button(window, text="Bathe", command=cleanPet)
-    btnBathe.grid(row=0, column=3)
+    btnBathe.grid(row=3, column=2)
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=0, column=4)
+    btnGoSomewhere.grid(row=6, column=2)
     # Create Return to Menu button
     btnMenu = Button(window, text="Back", command=showMenuWindow)
-    btnMenu.grid(row=1, column=0)
+    btnMenu.grid(row=6, column=0)
 
 def showLocationWindow():
     """
