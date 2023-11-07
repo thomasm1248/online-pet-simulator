@@ -465,9 +465,32 @@ def showLocationWindow():
     window.title("Location")
     # Create the listbox containing locations to go to
     Lb = Listbox(window)
-    Lb.insert(1, 'Dog Park')
-    Lb.insert(2, 'Vet')
-    Lb.insert(3, 'Walk')
+    if pet.TYPE == "dog":
+        Lb.insert(1, 'Dog Park')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "cat":
+        Lb.insert(1, 'Pet Store')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "fish":
+        Lb.insert(1, 'Aquarium')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Swim')
+    elif pet.TYPE == "rock":
+        Lb.insert(1, 'Gravel Pit')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Rock Polisher')
+    elif pet.TYPE == "lizzard":
+        Lb.insert(1, 'A Hot Rock')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "plant":
+        Lb.insert(1, 'Greenhouse')
+        Lb.insert(2, 'Plant Specialist')
+        Lb.insert(3, 'Flower Pot Store')
+    else:
+        Lb.insert(1, 'The Park')
     # Create a button to confirm selected location in listbox
     btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
     Lb.pack()
@@ -480,17 +503,20 @@ def showOutcomeWindow(location):
     # Create a new window
     window = newWindow()
     window.title("Outcome")
-    # Display the location you went with your pet
-    labelYouWent = Label(text="You went to " + location)
-    labelYouWent.pack()
-    # Change stats based on the location you went to
-    if location == 'Dog Park':
+    # Change stats and label based on the location you went to
+    if location == 'Walk' or location == 'Swim':
+        # Display if you walked or swam with your pet
+        labelYouWent = Label(text="You went on a " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
-    elif location == 'Vet':
+    elif location == 'Vet' or location == 'Plant Specialist':
+        # Display where you went with your pet
+        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
         takePetToVet()
-    elif location == 'Walk':
+    else:
+        # Display where you went with your pet
+        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
-
+    labelYouWent.pack()
     # Create a button to go back to the petcare window
     btnGoBack = Button(window, text="Return Home", command=showPetCareWindow)
     btnGoBack.pack()
