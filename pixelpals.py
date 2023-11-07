@@ -308,29 +308,34 @@ def feedPet():
     Called by the feed button on the pet care window.
     """
     PetEvents.feed(pet, 1.0)
+    updateStatLabels()
 
 def waterPet():
     """
     Called by the water button on the pet care window.
     """
     PetEvents.hydrate(pet, 1.0)
+    updateStatLabels()
 
 def cleanPet():
     """
     Called by the clean button on the pet care window.
     """
     PetEvents.clean(pet, 1.0)
+    updateStatLabels()
 
 def playWithPet():
     """
     Called by the play button on the pet care window.
     """
     PetEvents.play(pet, 1.0)
+    updateStatLabels()
 
 def takePetToVet():
     """
     """
     PetEvents.medicate(pet, 1.0)
+    updateStatLabels()
 
 
 
