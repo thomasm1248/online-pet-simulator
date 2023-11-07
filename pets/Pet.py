@@ -86,7 +86,9 @@ class Pet(ABC):
         depletion = - (rate / 6000)
       
       # calculate the new stat, with some variability
-      new_stat = stat_value + depletion * (1.05 - random.random() * 0.1 ) # +- 5% variance
+      # max and min to force the stat between "0" and 1
+      # random gives +- 5% variance
+      new_stat = max(-1e6, min(stat_value + depletion * (1.05 - random.random() * 0.1 ) , 1)) 
         
       # add updated stat to the lifetime tracker
       self.lifetime_stats[stat].append(new_stat)
@@ -96,13 +98,13 @@ class Pet(ABC):
     
     # if any stat is less than 0.3, there should be a health and happiness penalty
     if any(value < 0.3 for value in current_stats.values()):
-      self.regulate_stat("health", - (8 / 6000)) # decrease current health
-      self.regulate_stat("love",   - (6 / 6000)) # decrease current love
+      self.regulate_stat("health", - (8 / 60000)) # decrease current health
+      self.regulate_stat("love",   - (6 / 60000)) # decrease current love
       
     # if any stat is less than 0.1, there should be a significant health and happiness penalty
     if any(value < 0.3 for value in current_stats.values()):
-      self.regulate_stat("health", - (64 / 6000)) # decrease current health
-      self.regulate_stat("love",   - (48 / 6000)) # decrease current love
+      self.regulate_stat("health", - (64 / 12000)) # decrease current health
+      self.regulate_stat("love",   - (48 / 12000)) # decrease current love
     
     # set the last update time to the time sent in
     self.last_update = time
