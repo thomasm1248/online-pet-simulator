@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from tkinter import *
 from tkinter import filedialog
+from PIL import ImageTk, Image
 import json
 import time
 import threading
@@ -421,10 +422,18 @@ def showPetCareWindow():
     # Create pet name label
     lblPetName = Label(window, text=pet.name)
     lblPetName.grid(row=0, column=0, columnspan=3)
+    # Display the image of the pet
+    img = Image.open(pet.picture_path)
+    width, height = img.size
+    img = img.resize((300,round(300*height/width)))
+    img = ImageTk.PhotoImage(img)
+    lblPetPicture = Label(window, image=img)
+    lblPetPicture.image = img
+    lblPetPicture.grid(row=1, column=0, columnspan=3)
     # Create pet status labels
     global statLabels
     statLabels = {}
-    row = 1
+    row = 2
     for statName in Pet.STATS:
         # Create label for the name of the stat
         lblStatName = Label(window, text=(statName.title() + ": "))
@@ -439,22 +448,22 @@ def showPetCareWindow():
     updateStatLabels()
     # Create Play Button
     btnPlay = Button(window, text="Play", command=playWithPet)
-    btnPlay.grid(row=3, column=2, sticky=W)
+    btnPlay.grid(row=4, column=2, sticky=W)
     # Create Feed Button
     btnFeed = Button(window, text="Feed", command=feedPet)
-    btnFeed.grid(row=1, column=2, sticky=W)
+    btnFeed.grid(row=2, column=2, sticky=W)
     # Create Water Button
     btnWater = Button(window, text="Water", command=waterPet)
-    btnWater.grid(row=2, column=2, sticky=W)
+    btnWater.grid(row=3, column=2, sticky=W)
     # Create Bathe Button
     btnBathe = Button(window, text="Bathe", command=cleanPet)
-    btnBathe.grid(row=4, column=2, sticky=W)
+    btnBathe.grid(row=5, column=2, sticky=W)
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=6, column=2)
+    btnGoSomewhere.grid(row=7, column=2)
     # Create Return to Menu button
     btnMenu = Button(window, text="Back", command=showMenuWindow)
-    btnMenu.grid(row=6, column=0)
+    btnMenu.grid(row=7, column=0)
 
 def showLocationWindow():
     """
