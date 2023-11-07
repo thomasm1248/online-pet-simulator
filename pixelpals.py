@@ -500,10 +500,14 @@ def showLocationWindow():
         Lb.insert(3, 'Flower Pot Store')
     else:
         Lb.insert(1, 'The Park')
+    # Create a back button
+    btnBack = Button(window, text="Back", command=showPetCareWindow)
     # Create a button to confirm selected location in listbox
     btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
-    Lb.pack()
-    btnGo.pack()
+    # Place elements on the window
+    Lb.grid(row=0, column=0, columnspan=2)
+    btnBack.grid(row=1, column=0, sticky=W)
+    btnGo.grid(row=1, column=1, sticky=E)
 
 def showOutcomeWindow(location):
     """
