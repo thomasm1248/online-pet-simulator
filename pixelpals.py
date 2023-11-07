@@ -275,9 +275,8 @@ def clockTick():
             updateStatLabels()
         except PassedAway as ex:
             petDied(datetime.now(), ex)
-
-    # Save the state to the save file
-    # TODO
+        # Save the state to the save file
+        saveStateToFile()
 
 def petDied(time, message):
     """
