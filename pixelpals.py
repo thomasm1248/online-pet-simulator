@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from tkinter import *
 from tkinter import filedialog
@@ -25,6 +26,10 @@ keepRunning = True
 # The pet object if there is one
 pet = None
 
+# Instead of deleting the pet when it dies, move it here so that
+# the stats window still has access to it
+deadPet = None
+
 # Global variable to store a reference to the current window object
 currentWindow = None
 
@@ -34,14 +39,19 @@ PET_TYPES = [
     "Cat",
     "Dog",
     "Fish",
-    "Lizard",
+    "Lizzard",
     "Rock",
     "Plant"
 ]
+SAVEFILE_FLOAT_PRECISION = 4
 
 # A reference to the label on the adoption window that contains the filename
 # of the image that will represent the pet
 lblFilename = None
+
+# A list of label objects if the petCare window is open. Each label object
+# should show a percentage of the stat as a string
+statLabels = None
 
 # StringVars for Tkinter Entry objects
 petName = None
@@ -102,6 +112,27 @@ def newWindow():
     currentWindow = Tk()
     return currentWindow
 
+def round_floats(o):
+    """
+    Rounds all the floats in an object.
+
+    Args:
+        o (object): the object containing floats
+    
+    Returns:
+        object: same object, but with rounded floats
+
+    Source:
+        https://til.simonwillison.net/python/json-floating-point
+    """
+    if isinstance(o, float):
+        return round(o, SAVEFILE_FLOAT_PRECISION)
+    if isinstance(o, dict):
+        return {k: round_floats(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [round_floats(x) for x in o]
+    return o
+
 
 
 #   #      ###   ###  ###  ###
@@ -127,9 +158,9 @@ def simulateEffectOfTimeOnPet():
             currentTime += timedelta(0, 60) # advance 60 seconds
             pet.update(currentTime)
         print("Done.")
-    except(PassedAway):
+    except PassedAway as ex:
         print("Pet passed away while you were gone.")
-        showDeathScreenWindow(currentTime)
+        petDied(currentTime, ex)
 
 def readStateFromSaveFile():
     """
@@ -171,7 +202,7 @@ def saveStateToFile():
     petDict['last_update'] = dateToText(petDict['last_update'])
     # Save the save data to a file
     file = open("pixelpalsave.json", "w")
-    json.dump(petDict, file)
+    json.dump(round_floats(petDict), file)
     file.close()
 
 def endProgram():
@@ -213,6 +244,20 @@ def createNewPet():
     # Switch to pet care window
     showPetCareWindow()
 
+def updateStatLabels():
+    """
+    Update the labels on the pet care window to show the current state of the pet.
+    Don't do anything unless the pet care window is currently being shown.
+    """
+    # Abort if the pet care window isn't being shown
+    if currentWindow.title() != "Pet Care":
+        return
+    # Get the current state of the pet
+    currentStats = pet.current_stats()
+    # Update the labels
+    for statName, value in currentStats.items():
+        statLabels[statName].config(text=("%.0f%%" % (value * 100)))
+
 def clockTick():
     """
     Tick the pet object if there is one, and update the state as needed. Automatically
@@ -224,40 +269,73 @@ def clockTick():
     # Call the pet's tick method if the user has a pet
     if pet is not None:
         try:
+            # Update pet
             pet.update(datetime.now())
-        except(PassedAway):
-            showDeathScreenWindow(datetime.now())
-    # Save the state to the save file
-    # TODO
+            # Update pet status labels if the pet care window is being displayed
+            updateStatLabels()
+        except PassedAway as ex:
+            petDied(datetime.now(), ex)
+        # Save the state to the save file
+        saveStateToFile()
+
+def petDied(time, message):
+    """
+    Called whenever the pet dies. Delete the save file, and switch to the death screen.
+    
+    Args:
+        time (datetime): time the pet died
+        message (string): a message to show the user
+    """
+    # Kill the pet
+    global deadPet
+    global pet
+    deadPet = pet
+    pet = None
+    # Delete save file
+    os.remove("pixelpalsave.json")
+    # Switch to death screen
+    showDeathScreenWindow(time, message)
+
+def giveUpOnPet():
+    """
+    Called by the giveUpOnPet window when the user confirms that they want to give
+    up on their pet. Make the pet die.
+    """
+    petDied(datetime.now(), "You gave up on %s." % pet.name)
 
 def feedPet():
     """
     Called by the feed button on the pet care window.
     """
     PetEvents.feed(pet, 1.0)
+    updateStatLabels()
 
 def waterPet():
     """
     Called by the water button on the pet care window.
     """
     PetEvents.hydrate(pet, 1.0)
+    updateStatLabels()
 
 def cleanPet():
     """
     Called by the clean button on the pet care window.
     """
     PetEvents.clean(pet, 1.0)
+    updateStatLabels()
 
 def playWithPet():
     """
     Called by the play button on the pet care window.
     """
     PetEvents.play(pet, 1.0)
+    updateStatLabels()
 
 def takePetToVet():
     """
     """
     PetEvents.medicate(pet, 1.0)
+    updateStatLabels()
 
 
 
@@ -340,24 +418,43 @@ def showPetCareWindow():
     # Create a new window
     window = newWindow()
     window.title("Pet Care")
+    # Create pet name label
+    lblPetName = Label(window, text=pet.name)
+    lblPetName.grid(row=0, column=0, columnspan=3)
+    # Create pet status labels
+    global statLabels
+    statLabels = {}
+    row = 1
+    for statName in Pet.STATS:
+        # Create label for the name of the stat
+        lblStatName = Label(window, text=(statName.title() + ": "))
+        lblStatName.grid(row=row, column=0, sticky=E)
+        # Create label for the percentage of the stat
+        lblStatPercent = Label(window)
+        lblStatPercent.grid(row=row, column=1, sticky=E)
+        # Add stat percent label to global 
+        statLabels[statName] = lblStatPercent
+        # Move to next row
+        row += 1
+    updateStatLabels()
     # Create Play Button
     btnPlay = Button(window, text="Play", command=playWithPet)
-    btnPlay.grid(row=0, column=0)
+    btnPlay.grid(row=3, column=2, sticky=W)
     # Create Feed Button
     btnFeed = Button(window, text="Feed", command=feedPet)
-    btnFeed.grid(row=0, column=1)
+    btnFeed.grid(row=1, column=2, sticky=W)
     # Create Water Button
     btnWater = Button(window, text="Water", command=waterPet)
-    btnWater.grid(row=0, column=2)
+    btnWater.grid(row=2, column=2, sticky=W)
     # Create Bathe Button
     btnBathe = Button(window, text="Bathe", command=cleanPet)
-    btnBathe.grid(row=0, column=3)
+    btnBathe.grid(row=4, column=2, sticky=W)
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=0, column=4)
+    btnGoSomewhere.grid(row=6, column=2)
     # Create Return to Menu button
     btnMenu = Button(window, text="Back", command=showMenuWindow)
-    btnMenu.grid(row=1, column=0)
+    btnMenu.grid(row=6, column=0)
 
 def showLocationWindow():
     """
@@ -366,11 +463,35 @@ def showLocationWindow():
     # Create a new window
     window = newWindow()
     window.title("Location")
+    # Create the listbox containing locations to go to
     Lb = Listbox(window)
-    Lb.insert(1, 'Dog Park')
-    Lb.insert(2, 'Vet')
-    Lb.insert(3, 'Walk')
-    Lb.insert(4, 'Grandmas House')
+    if pet.TYPE == "dog":
+        Lb.insert(1, 'Dog Park')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "cat":
+        Lb.insert(1, 'Pet Store')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "fish":
+        Lb.insert(1, 'Aquarium')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Swim')
+    elif pet.TYPE == "rock":
+        Lb.insert(1, 'Gravel Pit')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Rock Polisher')
+    elif pet.TYPE == "lizzard":
+        Lb.insert(1, 'A Hot Rock')
+        Lb.insert(2, 'Vet')
+        Lb.insert(3, 'Walk')
+    elif pet.TYPE == "plant":
+        Lb.insert(1, 'Greenhouse')
+        Lb.insert(2, 'Plant Specialist')
+        Lb.insert(3, 'Flower Pot Store')
+    else:
+        Lb.insert(1, 'The Park')
+    # Create a button to confirm selected location in listbox
     btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
     Lb.pack()
     btnGo.pack()
@@ -382,9 +503,23 @@ def showOutcomeWindow(location):
     # Create a new window
     window = newWindow()
     window.title("Outcome")
-    label1 = Label(text="You went to " + location)
-    label1.pack()
-    pass
+    # Change stats and label based on the location you went to
+    if location == 'Walk' or location == 'Swim':
+        # Display if you walked or swam with your pet
+        labelYouWent = Label(text="You went on a " + location + " with " + pet.name)
+        playWithPet()  # TODO change to correct method
+    elif location == 'Vet' or location == 'Plant Specialist':
+        # Display where you went with your pet
+        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        takePetToVet()
+    else:
+        # Display where you went with your pet
+        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        playWithPet()  # TODO change to correct method
+    labelYouWent.pack()
+    # Create a button to go back to the petcare window
+    btnGoBack = Button(window, text="Return Home", command=showPetCareWindow)
+    btnGoBack.pack()
 
 def showGiveUpWindow():
     """
@@ -395,13 +530,13 @@ def showGiveUpWindow():
     window.title("Give Up")
     # Create a label to ask the user if they want to give up on their pet
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
-    lblGiveUp.grid(row=0, column=0)
+    lblGiveUp.grid(row=0, column=0, columnspan=2)
     # Create a button for yes
-    btnYes = Button(window, text="Yes") # Still need to add command
-    btnYes.grid(row=1, column=0)
+    btnYes = Button(window, text="Yes", command=giveUpOnPet)
+    btnYes.grid(sticky=E, row=1, column=0)
     # Create a button for no
-    btnNo = Button(window, text="No") # Still need to add command
-    btnNo.grid(row=1, column=1)
+    btnNo = Button(window, text="No", command=showMenuWindow)
+    btnNo.grid(sticky=W, row=1, column=1)
 
 def showRandomEventWindow():
     """
@@ -412,21 +547,30 @@ def showRandomEventWindow():
     window.title("Random Event")
     pass
 
-def showDeathScreenWindow():
+def showDeathScreenWindow(time, message):
     """
     Display a window that lets the user know that their pet has died.
+
+    Args:
+        time (datetime): date/time the pet died
+        message (string): a message to give to the user
     """
     # Create a new window
     window = newWindow()
     window.title("Death")
     # Create a label to let the user know their pet has died
-    lblInfo = Label(window, text="Your pet has died.")
+    lblInfo = Label(window, text=message)
     lblInfo.grid(row=0, column=0)
+    # Create a label to let the user know when their pet died
+    timeString = time.strftime("Passed away %b %d, at %I:%M %p")
+    lblDate = Label(window, text=timeString)
+    lblDate.grid(row=1, column=0)
     # Create a button to switch to the stats window
     btnViewStats = Button(window, text="View Stats", command=showStatsWindow)
-    btnViewStats.grid(row=1, column=0)
+    btnViewStats.grid(row=2, column=0)
 
 def showStatsWindow():
+    # TODO use the deadPet global to access the pet, not the pet global
     pass
 
 
