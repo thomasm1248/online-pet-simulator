@@ -439,16 +439,16 @@ def showPetCareWindow():
     updateStatLabels()
     # Create Play Button
     btnPlay = Button(window, text="Play", command=playWithPet)
-    btnPlay.grid(row=4, column=2)
+    btnPlay.grid(row=3, column=2)
     # Create Feed Button
     btnFeed = Button(window, text="Feed", command=feedPet)
-    btnFeed.grid(row=2, column=2)
+    btnFeed.grid(row=1, column=2)
     # Create Water Button
     btnWater = Button(window, text="Water", command=waterPet)
-    btnWater.grid(row=1, column=2)
+    btnWater.grid(row=2, column=2)
     # Create Bathe Button
     btnBathe = Button(window, text="Bathe", command=cleanPet)
-    btnBathe.grid(row=3, column=2)
+    btnBathe.grid(row=4, column=2)
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
     btnGoSomewhere.grid(row=6, column=2)
