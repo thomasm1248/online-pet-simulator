@@ -422,14 +422,19 @@ def showPetCareWindow():
     # Create pet name label
     lblPetName = Label(window, text=pet.name)
     lblPetName.grid(row=0, column=0, columnspan=3)
-    # Display the image of the pet
-    img = Image.open(pet.picture_path)
-    width, height = img.size
-    img = img.resize((300,round(300*height/width)))
-    img = ImageTk.PhotoImage(img)
-    lblPetPicture = Label(window, image=img)
-    lblPetPicture.image = img
-    lblPetPicture.grid(row=1, column=0, columnspan=3)
+    # Display the image of the pet if there is one
+    try:
+        img = Image.open(pet.picture_path)
+        print(img)
+        width, height = img.size
+        img = img.resize((300,round(300*height/width)))
+        img = ImageTk.PhotoImage(img)
+        lblPetPicture = Label(window, image=img)
+        lblPetPicture.image = img
+        lblPetPicture.grid(row=1, column=0, columnspan=3)
+    except:
+        lblNoPicture = Label(window, text="No Image Found")
+        lblNoPicture.grid(row=1, column=0, columnspan=3)
     # Create pet status labels
     global statLabels
     statLabels = {}
