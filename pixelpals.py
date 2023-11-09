@@ -364,6 +364,7 @@ def showMenuWindow():
     # Create Title label
     lblTitle = Label(window, text="Pixel Pals")
     lblTitle.grid(row=0, column=0)
+    lblTitle.config(font=("Courier", 44))
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
     btnNewPet.grid(row=1, column=0)
@@ -429,6 +430,7 @@ def showPetCareWindow():
     # Create pet name label
     lblPetName = Label(window, text=pet.name)
     lblPetName.grid(row=0, column=0, columnspan=3)
+    lblPetName.config(font=("Ariel", 20))
     # Display the image of the pet if there is one
     try:
         img = Image.open(pet.picture_path)
