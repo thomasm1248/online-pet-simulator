@@ -361,29 +361,32 @@ def showMenuWindow():
     """
     # Create a new window
     window = newWindow("Pixel Pals")
+    # Create Title label
+    lblTitle = Label(window, text="Pixel Pals")
+    lblTitle.grid(row=0, column=0)
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
-    btnNewPet.grid(row=0, column=0)
+    btnNewPet.grid(row=1, column=0)
     if pet is not None:
         btnNewPet["state"] = "disabled"
     # Create a pet care button
     btnPetCare = Button(window, text="Take Care of Pet", command=showPetCareWindow)
-    btnPetCare.grid(row=1, column=0)
+    btnPetCare.grid(row=2, column=0)
     if pet is None:
         btnPetCare["state"] = "disabled"
     # Create a go somewhere button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=2, column=0)
+    btnGoSomewhere.grid(row=3, column=0)
     if pet is None:
         btnGoSomewhere["state"] = "disabled"
     # Create a give up button
     btnGiveUp = Button(window, text="Give Up", command=showGiveUpWindow)
-    btnGiveUp.grid(row=3, column=0)
+    btnGiveUp.grid(row=4, column=0)
     if pet is None:
         btnGiveUp["state"] = "disabled"
     # Create a quit button
     btnQuit = Button(window, text="Quit", command=endProgram)
-    btnQuit.grid(row=4, column=0)
+    btnQuit.grid(row=5, column=0)
 
 def showAdoptionWindow():
     """
