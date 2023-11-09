@@ -429,7 +429,6 @@ def showPetCareWindow():
     # Display the image of the pet if there is one
     try:
         img = Image.open(pet.picture_path)
-        print(img)
         width, height = img.size
         img = img.resize((300,round(300*height/width)))
         img = ImageTk.PhotoImage(img)
