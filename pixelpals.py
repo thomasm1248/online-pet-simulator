@@ -33,6 +33,7 @@ deadPet = None
 
 # Global variable to store a reference to the current window object
 currentWindow = None
+currentWindowFrame = None
 
 # Constants
 DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
@@ -95,7 +96,7 @@ def textToDate(text):
     """
     return datetime.strptime(text, DATETIME_FORMAT)
 
-def newWindow():
+def newWindow(title):
     """
     Check if a window object is currently being stored in the "currentWindow" global,
     and if there is, close it. After that, use Tkinter to create a new window
@@ -105,13 +106,19 @@ def newWindow():
         window object: the new window that has been created
     """
     global currentWindow
-    # Check if there is currently a window that needs to be closed
+    global currentWindowFrame
+    # Check if there is currently a window with a frame that needs to be closed
     if currentWindow is not None:
-        currentWindow.quit()
-        currentWindow.destroy()
-    # Create and return a new window
-    currentWindow = Tk()
-    return currentWindow
+        currentWindowFrame.destroy()
+    # Create and return a new window if there isn't one
+    if currentWindow is None:
+        currentWindow = Tk()
+    # Set the title of the window
+    currentWindow.title(title)
+    # Add a frame to the window
+    currentWindowFrame = Frame(currentWindow)
+    currentWindowFrame.pack()
+    return currentWindowFrame
 
 def round_floats(o):
     """
@@ -353,8 +360,7 @@ def showMenuWindow():
     Display the main menu window, and set up event handlers for the buttons.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Pixel Pals")
+    window = newWindow("Pixel Pals")
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
     btnNewPet.grid(row=0, column=0)
@@ -384,8 +390,7 @@ def showAdoptionWindow():
     Display the pet adoption window. This window is used to create a new pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("New Pet")
+    window = newWindow("New Pet")
     # Create a field to enter the pet's name
     global petName
     petName = StringVar()
@@ -417,8 +422,7 @@ def showPetCareWindow():
     Display the pet care window. This window is used to take care of the pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Pet Care")
+    window = newWindow("Pet Care")
     # Create pet name label
     lblPetName = Label(window, text=pet.name)
     lblPetName.grid(row=0, column=0, columnspan=3)
@@ -475,8 +479,7 @@ def showLocationWindow():
     Display the location window. This window is used to go somewhere with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Location")
+    window = newWindow("Location")
     # Create the listbox containing locations to go to
     Lb = Listbox(window)
     if pet.TYPE == "dog":
@@ -519,8 +522,7 @@ def showOutcomeWindow(location):
     Display the outcome window. This window is used to display the outcome of going somewhere with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Outcome")
+    window = newWindow("Outcome")
     # Change stats and label based on the location you went to
     if location == 'Walk' or location == 'Swim':
         # Display if you walked or swam with your pet
@@ -544,8 +546,7 @@ def showGiveUpWindow():
     Display the Give Up window. This window is used to give up on your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Give Up")
+    window = newWindow("Give Up")
     # Create a label to ask the user if they want to give up on their pet
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
     lblGiveUp.grid(row=0, column=0, columnspan=2)
@@ -561,8 +562,7 @@ def showRandomEventWindow():
     Display the random event window. This window is used to display a random event with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Random Event")
+    window = newWindow("Random Event")
     pass
 
 def showDeathScreenWindow(time, message):
@@ -574,8 +574,7 @@ def showDeathScreenWindow(time, message):
         message (string): a message to give to the user
     """
     # Create a new window
-    window = newWindow()
-    window.title("Death")
+    window = newWindow("Death")
     # Create a label to let the user know their pet has died
     lblInfo = Label(window, text=message)
     lblInfo.grid(row=0, column=0)
