@@ -530,15 +530,15 @@ def showOutcomeWindow(location):
     # Change stats and label based on the location you went to
     if location == 'Walk' or location == 'Swim':
         # Display if you walked or swam with your pet
-        labelYouWent = Label(text="You went on a " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went on a " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
     elif location == 'Vet' or location == 'Plant Specialist':
         # Display where you went with your pet
-        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went to the " + location + " with " + pet.name)
         takePetToVet()
     else:
         # Display where you went with your pet
-        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went to the " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
     labelYouWent.pack()
     # Create a button to go back to the petcare window
