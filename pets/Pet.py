@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 from scipy import ndimage
+from .BaseRates import BaseRates
 
 # this exception is raised when a pet passes away
 class PassedAway(Exception):
@@ -189,9 +190,8 @@ class Pet(ABC):
     key = cls.TYPE
     
     # reading in the base stats
-    with open("pets/base_rates.json", 'r') as DATA_FILE:  ## MIGHT BREAK WHEN INTEGRATING!! if so, change path
-      DATA = json.load(DATA_FILE)
-      base_rates = DATA.get(key, DATA["default"])
+    DATA = BaseRates.rates
+    base_rates = DATA.get(key, DATA["default"])
     
     # some randomness
     for rate_key, rate_value in base_rates.items():
