@@ -6,6 +6,7 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from scipy import ndimage
 
 # this exception is raised when a pet passes away
 class PassedAway(Exception):
@@ -98,13 +99,13 @@ class Pet(ABC):
     
     # if any stat is less than 0.3, there should be a health and happiness penalty
     if any(value < 0.3 for value in current_stats.values()):
-      self.regulate_stat("health", - (8 / 60000)) # decrease current health
-      self.regulate_stat("love",   - (6 / 60000)) # decrease current love
+      self.regulate_stat("health", - (8 / 12000)) # decrease current health
+      self.regulate_stat("love",   - (6 / 12000)) # decrease current love
       
     # if any stat is less than 0.1, there should be a significant health and happiness penalty
-    if any(value < 0.3 for value in current_stats.values()):
-      self.regulate_stat("health", - (64 / 12000)) # decrease current health
-      self.regulate_stat("love",   - (48 / 12000)) # decrease current love
+    if any(value < 0.1 for value in current_stats.values()):
+      self.regulate_stat("health", - (64 / 60000)) # decrease current health
+      self.regulate_stat("love",   - (48 / 60000)) # decrease current love
     
     # set the last update time to the time sent in
     self.last_update = time
@@ -208,26 +209,48 @@ class Pet(ABC):
     time_axis = pd.date_range(self.adoption_time, self.last_update, periods=number_of_minutes).to_pydatetime()
     
     # smoothing variables
-    smooth_kernel = [1/8, 3/4, 1/8]
-    weights = np.convolve(np.ones(number_of_minutes), smooth_kernel, mode="same")
+    days_alive = (self.last_update - self.adoption_time).days + 1
+    # smooth_kernel = 0.99 * ndimage.gaussian_filter1d(np.float_([0] * days_alive * 2 + [1] + [0] * days_alive * 2), days_alive)  + 0.01 * np.ones(4 * days_alive + 1) / (4 * days_alive + 1) 
+    
+    if days_alive < 2:
+      step = 10
+    elif days_alive < 14:
+      step = 30
+    else: 
+      step = 2 * 60
+    
+    smooth_kernel = np.ones(5) / (5) 
+    weights = np.convolve(np.ones(number_of_minutes)[::step], smooth_kernel, mode="same")
     
     # plot each stat
     for stat, values in self.lifetime_stats.items():
-      values = np.array(values)
+      values = np.array(values)[::-1][::step][::-1]
+      
+      print(stat, values[-1])
       
       # make the plot smooth
       if convolve:
-        for _ in range(10):
+        last = values[-1]
+        
+        for _ in range(4):
           values = np.convolve(values, smooth_kernel, mode='same') / weights
+          values[-1] = last
           
-      plt.plot(time_axis, values, label = stat)
+      plt.plot(time_axis[::-1][::step][::-1], values, label = stat)
     
     # make the plot nicer
     plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
+    plt.ylim(0, 1)
     plt.legend()
-    plt.xlabel("Time")
-    plt.ylabel("Pet Levels")
+    plt.xlabel(f"Time\nTotal Cost: {self.money}")
+    plt.ylabel("Stats Levels")
+    plt.suptitle(f"{self.name}'s Life")
+    plt.title(f"Days Lived: {days_alive}")
+    plt.axhline(y = 0.3, color = 'b', linestyle = '--') 
+    plt.axhline(y = 0.1, color = 'r', linestyle = '--') 
     plt.savefig(temp_file_name)
+    
+    return
       
     
     

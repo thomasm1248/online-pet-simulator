@@ -3,7 +3,7 @@
     {
         "hunger_rate": 0.639, 
         "hydration_rate": 0.107, 
-        "love_rate": 2.2, 
+        "love_rate": 1.6, 
         "hygiene_rate": 0.265, 
         "health_rate": 0.739,
         "sleep_efficiency": 0.7
@@ -39,7 +39,7 @@
     {
         "hunger_rate": 4.6, 
         "hydration_rate": 0.754, 
-        "love_rate": 3.4, 
+        "love_rate": 2.1, 
         "hygiene_rate": -1, 
         "health_rate": 0.156,
         "sleep_efficiency": 0.3
