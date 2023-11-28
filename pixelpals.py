@@ -2,6 +2,7 @@ import os
 from datetime import datetime, timedelta
 from tkinter import *
 from tkinter import filedialog
+from PIL import ImageTk, Image
 import json
 import time
 import threading
@@ -32,6 +33,7 @@ deadPet = None
 
 # Global variable to store a reference to the current window object
 currentWindow = None
+currentWindowFrame = None
 
 # Constants
 DATETIME_FORMAT = "%Y%m%d%H%M%S%f"
@@ -94,7 +96,7 @@ def textToDate(text):
     """
     return datetime.strptime(text, DATETIME_FORMAT)
 
-def newWindow():
+def newWindow(title):
     """
     Check if a window object is currently being stored in the "currentWindow" global,
     and if there is, close it. After that, use Tkinter to create a new window
@@ -104,13 +106,19 @@ def newWindow():
         window object: the new window that has been created
     """
     global currentWindow
-    # Check if there is currently a window that needs to be closed
+    global currentWindowFrame
+    # Check if there is currently a window with a frame that needs to be closed
     if currentWindow is not None:
-        currentWindow.quit()
-        currentWindow.destroy()
-    # Create and return a new window
-    currentWindow = Tk()
-    return currentWindow
+        currentWindowFrame.destroy()
+    # Create and return a new window if there isn't one
+    if currentWindow is None:
+        currentWindow = Tk()
+    # Set the title of the window
+    currentWindow.title(title)
+    # Add a frame to the window
+    currentWindowFrame = Frame(currentWindow)
+    currentWindowFrame.pack()
+    return currentWindowFrame
 
 def round_floats(o):
     """
@@ -352,39 +360,41 @@ def showMenuWindow():
     Display the main menu window, and set up event handlers for the buttons.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Pixel Pals")
+    window = newWindow("Pixel Pals")
+    # Create Title label
+    lblTitle = Label(window, text="Pixel Pals")
+    lblTitle.grid(row=0, column=0)
+    lblTitle.config(font=("Courier", 44))
     # Create a new pet button
     btnNewPet = Button(window, text="New Pet", command=showAdoptionWindow)
-    btnNewPet.grid(row=0, column=0)
+    btnNewPet.grid(row=1, column=0)
     if pet is not None:
         btnNewPet["state"] = "disabled"
     # Create a pet care button
     btnPetCare = Button(window, text="Take Care of Pet", command=showPetCareWindow)
-    btnPetCare.grid(row=1, column=0)
+    btnPetCare.grid(row=2, column=0)
     if pet is None:
         btnPetCare["state"] = "disabled"
     # Create a go somewhere button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=2, column=0)
+    btnGoSomewhere.grid(row=3, column=0)
     if pet is None:
         btnGoSomewhere["state"] = "disabled"
     # Create a give up button
     btnGiveUp = Button(window, text="Give Up", command=showGiveUpWindow)
-    btnGiveUp.grid(row=3, column=0)
+    btnGiveUp.grid(row=4, column=0)
     if pet is None:
         btnGiveUp["state"] = "disabled"
     # Create a quit button
     btnQuit = Button(window, text="Quit", command=endProgram)
-    btnQuit.grid(row=4, column=0)
+    btnQuit.grid(row=5, column=0)
 
 def showAdoptionWindow():
     """
     Display the pet adoption window. This window is used to create a new pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("New Pet")
+    window = newWindow("New Pet")
     # Create a field to enter the pet's name
     global petName
     petName = StringVar()
@@ -416,15 +426,27 @@ def showPetCareWindow():
     Display the pet care window. This window is used to take care of the pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Pet Care")
+    window = newWindow("Pet Care")
     # Create pet name label
     lblPetName = Label(window, text=pet.name)
     lblPetName.grid(row=0, column=0, columnspan=3)
+    lblPetName.config(font=("Ariel", 20))
+    # Display the image of the pet if there is one
+    try:
+        img = Image.open(pet.picture_path)
+        width, height = img.size
+        img = img.resize((300,round(300*height/width)))
+        img = ImageTk.PhotoImage(img)
+        lblPetPicture = Label(window, image=img)
+        lblPetPicture.image = img
+        lblPetPicture.grid(row=1, column=0, columnspan=3)
+    except:
+        lblNoPicture = Label(window, text="No Image Found")
+        lblNoPicture.grid(row=1, column=0, columnspan=3)
     # Create pet status labels
     global statLabels
     statLabels = {}
-    row = 1
+    row = 2
     for statName in Pet.STATS:
         # Create label for the name of the stat
         lblStatName = Label(window, text=(statName.title() + ": "))
@@ -439,30 +461,29 @@ def showPetCareWindow():
     updateStatLabels()
     # Create Play Button
     btnPlay = Button(window, text="Play", command=playWithPet)
-    btnPlay.grid(row=3, column=2, sticky=W)
+    btnPlay.grid(row=4, column=2, sticky=W)
     # Create Feed Button
     btnFeed = Button(window, text="Feed", command=feedPet)
-    btnFeed.grid(row=1, column=2, sticky=W)
+    btnFeed.grid(row=2, column=2, sticky=W)
     # Create Water Button
     btnWater = Button(window, text="Water", command=waterPet)
-    btnWater.grid(row=2, column=2, sticky=W)
+    btnWater.grid(row=3, column=2, sticky=W)
     # Create Bathe Button
     btnBathe = Button(window, text="Bathe", command=cleanPet)
-    btnBathe.grid(row=4, column=2, sticky=W)
+    btnBathe.grid(row=5, column=2, sticky=W)
     # Create Go Somewhere Button
     btnGoSomewhere = Button(window, text="Go Somewhere", command=showLocationWindow)
-    btnGoSomewhere.grid(row=6, column=2)
+    btnGoSomewhere.grid(row=7, column=2)
     # Create Return to Menu button
     btnMenu = Button(window, text="Back", command=showMenuWindow)
-    btnMenu.grid(row=6, column=0)
+    btnMenu.grid(row=7, column=0)
 
 def showLocationWindow():
     """
     Display the location window. This window is used to go somewhere with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Location")
+    window = newWindow("Location")
     # Create the listbox containing locations to go to
     Lb = Listbox(window)
     if pet.TYPE == "dog":
@@ -491,30 +512,33 @@ def showLocationWindow():
         Lb.insert(3, 'Flower Pot Store')
     else:
         Lb.insert(1, 'The Park')
+    # Create a back button
+    btnBack = Button(window, text="Back", command=showPetCareWindow)
     # Create a button to confirm selected location in listbox
     btnGo = Button(window, text="Lets Go!", command=lambda: showOutcomeWindow(Lb.get(Lb.curselection())))
-    Lb.pack()
-    btnGo.pack()
+    # Place elements on the window
+    Lb.grid(row=0, column=0, columnspan=2)
+    btnBack.grid(row=1, column=0, sticky=W)
+    btnGo.grid(row=1, column=1, sticky=E)
 
 def showOutcomeWindow(location):
     """
     Display the outcome window. This window is used to display the outcome of going somewhere with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Outcome")
+    window = newWindow("Outcome")
     # Change stats and label based on the location you went to
     if location == 'Walk' or location == 'Swim':
         # Display if you walked or swam with your pet
-        labelYouWent = Label(text="You went on a " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went on a " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
     elif location == 'Vet' or location == 'Plant Specialist':
         # Display where you went with your pet
-        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went to the " + location + " with " + pet.name)
         takePetToVet()
     else:
         # Display where you went with your pet
-        labelYouWent = Label(text="You went to the " + location + " with " + pet.name)
+        labelYouWent = Label(window, text="You went to the " + location + " with " + pet.name)
         playWithPet()  # TODO change to correct method
     labelYouWent.pack()
     # Create a button to go back to the petcare window
@@ -526,8 +550,7 @@ def showGiveUpWindow():
     Display the Give Up window. This window is used to give up on your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Give Up")
+    window = newWindow("Give Up")
     # Create a label to ask the user if they want to give up on their pet
     lblGiveUp = Label(window, text="Would you like to give up on your pet?")
     lblGiveUp.grid(row=0, column=0, columnspan=2)
@@ -543,8 +566,7 @@ def showRandomEventWindow():
     Display the random event window. This window is used to display a random event with your pet.
     """
     # Create a new window
-    window = newWindow()
-    window.title("Random Event")
+    window = newWindow("Random Event")
     pass
 
 def showDeathScreenWindow(time, message):
@@ -556,8 +578,7 @@ def showDeathScreenWindow(time, message):
         message (string): a message to give to the user
     """
     # Create a new window
-    window = newWindow()
-    window.title("Death")
+    window = newWindow("Death")
     # Create a label to let the user know their pet has died
     lblInfo = Label(window, text=message)
     lblInfo.grid(row=0, column=0)
