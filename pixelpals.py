@@ -591,8 +591,25 @@ def showDeathScreenWindow(time, message):
     btnViewStats.grid(row=2, column=0)
 
 def showStatsWindow():
-    # TODO use the deadPet global to access the pet, not the pet global
-    pass
+    # Create a new window
+    window = newWindow("Lifetime Statistics")
+    # Have the pet object generate a graph
+    deadPet.plot_stats("pet_stats.png")
+    # Display graph
+    try:
+        img = Image.open("pet_stats.png")
+        width, height = img.size
+        img = img.resize((300,round(300*height/width)))
+        img = ImageTk.PhotoImage(img)
+        lblGraphPicture = Label(window, image=img)
+        lblGraphPicture.image = img
+        lblGraphPicture.grid(row=1, column=0)
+    except:
+        lblNoPicture = Label(window, text="Error displaying graph")
+        lblNoPicture.grid(row=1, column=0)
+    # Create a back button
+    btnBack = Button(window, text="Back to Menu", command=showMenuWindow)
+    btnBack.grid(row=2, column=0)
 
 
 
