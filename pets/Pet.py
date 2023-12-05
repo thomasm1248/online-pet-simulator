@@ -199,7 +199,7 @@ class Pet(ABC):
     
     # assigning other fields the lazy way
     pet.__dict__.update(base_rates)
-    pet.lifetime_stats: dict[str, list[float]] = {stat : [1.0] for stat in cls.STATS}
+    pet.lifetime_stats: dict[str, list[float]] = {stat : [1.0] * 2 for stat in cls.STATS}
     
     return pet
   
@@ -212,7 +212,10 @@ class Pet(ABC):
     days_alive = (self.last_update - self.adoption_time).days + 1
     # smooth_kernel = 0.99 * ndimage.gaussian_filter1d(np.float_([0] * days_alive * 2 + [1] + [0] * days_alive * 2), days_alive)  + 0.01 * np.ones(4 * days_alive + 1) / (4 * days_alive + 1) 
     
-    if days_alive < 2:
+    if number_of_minutes < 60:
+      step = 1
+      convolve = False
+    elif days_alive < 2:
       step = 10
     elif days_alive < 14:
       step = 30
